@@ -9,7 +9,7 @@ const path = require('path');
 const thriftParser = require('thrift-parser');
 
 
-genDts('thrift/tutorial.thrift', 'server/gen-nodejs/').catch((e)=>{
+genDts('thrift/keycenter.thrift', 'gen-nodejs/').catch((e)=>{
   console.log('genThrift.dts ERROR:', e)
 })
 
@@ -64,8 +64,14 @@ async function genTypesDts(ast, fileName, outdir) {
     exportNames: structNames,
     str: structStr
   } = genStruct(ast.struct);
+  const {
+    exportNames: exeptionNames,
+    str: exeptionStr
+  } = genExeption(ast.exception);
   const re = `
   import Int64 from 'node-int64';
+  import { Thrift } from "thrift";
+
 
   /* ---include---------*/
   ${includeStr}
@@ -82,9 +88,12 @@ async function genTypesDts(ast, fileName, outdir) {
   /* ---struct---------*/
   ${structStr}
 
+  /* ---exception---------*/
+  ${exeptionStr}
+
   `
 
-  const exportNames = [...typedeNames, ...enumNames, ...constNames, ...structNames]
+  const exportNames = [...typedeNames, ...enumNames, ...constNames, ...structNames, ...exeptionNames]
 
   // const dtsFilePathName =filePathName.replace(/\.thrift$/, '_types.d.ts');
   const typesFileName =fileName.replace(/\.thrift$/, '_types.d.ts').split('/').pop();
@@ -159,6 +168,32 @@ function genEnum(_enum) {
     str:declare
   };
 }
+
+/**
+ * enum 转换
+ * @param {*} enum
+ */
+function genExeption(exception) {
+  if (!exception) {
+    return {
+      exportNames:[],
+      str: ''
+    }
+  }
+  const exportNames =[]
+
+  // console.log(exception);
+  const declare = Object.entries(exception).map(([name, {items=[]}])=>{
+    exportNames.push(name)
+    return `declare const ${name}: typeof Thrift.TException` 
+  }).join('\n')
+  return {
+    exportNames,
+    str:declare
+  };
+}
+
+
 
 /**
  * 转换 const
@@ -246,7 +281,7 @@ async function genServiceDts(ast, selfFileName, typesFileName, exportNames, outd
     let re = `export declare interface ${name} ${_extends ? `extends ${_extends.split('.').pop()}`: ''} {
       ${
         Object.entries(functions).map(([key, {name, args, type, oneway}])=>{
-          return `${name}(${genArgs(args)} ${(args && args.length && !oneway) ? ',': ''} ${genCallback(oneway, type)}): void;`
+          return `${name}(${genArgs(args)} ${(args && args.length && !oneway) ? ',': ''} ${genCallback(oneway, type)}): Promise<${typeFactory(type)}>;`
         }).join(' \n')
       }
     } \n` 
@@ -324,7 +359,7 @@ const typeNamePap = {
   i64: ()=> 'Int64'  ,
   double: ()=> 'number'  ,
   string: ()=> 'string' ,
-  binary: ()=> 'Uint8Array' ,
+  binary: ()=> 'Buffer' ,
 }
 
 function valueFactory(type, value) {
@@ -360,3 +395,5 @@ const typeValueMap = {
     ]`
   },
 }
+
+export default genDts;

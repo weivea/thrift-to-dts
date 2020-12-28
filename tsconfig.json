@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "isolatedModules": false,
+    "noEmit": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "declaration": true,
+    "outDir": "dist",
+    "declarationDir": "dist/types",
+    "baseUrl": ".",
+    "paths": {}
+  },
+  "include": ["./*.d.ts", "./*.ts" ,"lib/*.ts", "lib/*.js", "lib/*.d.ts", "lib/*.d.ts"]
+}
