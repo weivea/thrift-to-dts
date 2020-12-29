@@ -13,41 +13,41 @@ import {
 export declare interface KeycenterAgent {
   batchEncrypt(
     sid: string,
-    raw: Array<Uint8Array>,
-    userOnlySecret: Uint8Array,
+    raw: Array<Buffer>,
+    userOnlySecret: Buffer,
     compressType: CompressionType,
-    callback: (err: any, data: Array<Uint8Array>) => void
-  ): Promise<Array<Uint8Array>>;
+    callback: (err: any, data: Array<Buffer>) => void
+  ): Promise<Array<Buffer>>;
   batchDecrypt(
     sid: string,
-    cipher: Array<Uint8Array>,
-    userOnlySecret: Uint8Array,
+    cipher: Array<Buffer>,
+    userOnlySecret: Buffer,
     compressType: CompressionType,
-    callback: (err: any, data: Array<Uint8Array>) => void
-  ): Promise<Array<Uint8Array>>;
+    callback: (err: any, data: Array<Buffer>) => void
+  ): Promise<Array<Buffer>>;
   encrypt(
     sid: string,
-    raw: Uint8Array,
-    userOnlySecret: Uint8Array,
+    raw: Buffer,
+    userOnlySecret: Buffer,
     compressType: CompressionType,
-    callback: (err: any, data: Uint8Array) => void
-  ): Promise<Uint8Array>;
+    callback: (err: any, data: Buffer) => void
+  ): Promise<Buffer>;
   decrypt(
     sid: string,
-    cipher: Uint8Array,
-    userOnlySecret: Uint8Array,
+    cipher: Buffer,
+    userOnlySecret: Buffer,
     compressType: CompressionType,
-    callback: (err: any, data: Uint8Array) => void
-  ): Promise<Uint8Array>;
+    callback: (err: any, data: Buffer) => void
+  ): Promise<Buffer>;
   makeSignature(
     sid: string,
-    data: Uint8Array,
-    callback: (err: any, data: Uint8Array) => void
-  ): Promise<Uint8Array>;
+    data: Buffer,
+    callback: (err: any, data: Buffer) => void
+  ): Promise<Buffer>;
   validateSignature(
     sid: string,
-    data: Uint8Array,
-    sign: Uint8Array,
+    data: Buffer,
+    sign: Buffer,
     callback: (err: any, data: boolean) => void
   ): Promise<boolean>;
 }
