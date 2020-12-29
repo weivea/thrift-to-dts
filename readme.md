@@ -9,9 +9,12 @@ ps:
 
 该工具编译出来的xxx.d.ts只适用于node端
 
+## install
+npm install git+https://github.com/weivea/thrift-to-dts.git
+
 ## usage
 ```javascript
-import genDts './genThrift.dts.js'
+import genDts 'thrift-to-dts'
 genDts('thrift/keycenter.thrift', 'gen-nodejs/').catch((e)=>{
   console.log('genThrift.dts ERROR:', e)
 })
